@@ -68,25 +68,23 @@ function Stop(data) {
 var ViewModel = function() {
     //Data
     var self = this;
-    self.allStops = [];
+    self.allStops = ko.observableArray([]);
     self.chosenStop = ko.observable();
-    self.query = ko.observable(""); //holds query
+    self.query = ko.observable(''); //holds query
 
     //Behaviours
+    //Implement a list view of the set of locations
     allStops.forEach(function(stop){
-        self.allStops.push( new Stop(stop) );
+        self.allStops().push( new Stop(stop) );
     });
 
+    /* Add functionality to animate a map marker when either the list item associated with it or the map marker itself is selected.
+     * Add functionality to open an infoWindow with information
+     */
     self.unselectAll = function() {
-        for (var i = 0; i < self.allStops.length; i++) {
-			self.allStops[i].selected(false);
+        for (var i = 0; i < self.allStops().length; i++) {
+			self.allStops()[i].selected(false);
 		}
-    };
-
-    self.showAll = function () {
-        for (var i = 0; i < self.allStops.length; i++) {
-            self.allStops[i].showStop(true);
-        }
     };
 
     self.selectStop = function(stop) {
@@ -94,82 +92,40 @@ var ViewModel = function() {
         this.selected(true);
     };
 
-    // self.filteredStops = ko.computed(function() {
-    //     return ko.utils.arrayFilter(self.allStops, function(stop) {
-    //         return this.name.toLowerCase().indexOf(self.query().toString().toLowerCase()) >= 0;
-    //     });
-    // });
 
-    // self.allStops = ko.dependentObservable(function() {
-    //     var search = self.query().toLowerCase();
-    //
-    //     if (search.length === 0) {
-    //         self.showAll();
-    //     } else {
-    //         return ko.utils.arrayFilter(self.allStops, function(stop) {
-    //             return this.name.toLowerCase().indexOf(search) >= 0;
-    //         });
-    //     }
-    // }, self);
-
+    /* Provide a filter option that uses an input field to filter both the list view
+     * and the map markers displayed by default on load.*/
+    self.showAll = function () {
+        for (var i = 0; i < self.allStops().length; i++) {
+            self.allStops()[i].showStop(true);
+        }
+    };
 
     self.filterStops = ko.computed(function () {
         console.log(self.query());
         var search = self.query().toLowerCase();
         console.log(search);
 
-        if (!search) {
+        if (search.length === 0) {
             self.showAll();
             console.log('I am showing all');
         } else {
-            return ko.utils.arrayFilter(self.allStops, function(stop) {
+            return ko.utils.arrayFilter(self.allStops(), function(stop) {
 
-                for (var i = 0; i < self.allStops.length; i++) {
-                    if (self.allStops[i].name.indexOf(search) > -1) {
-                        self.allStops[i].showStop(true);
+                for (var i = 0; i < self.allStops().length; i++) {
+                    var nameLC = self.allStops()[i].name().toLowerCase();
+                    console.log(nameLC);
+                    if (nameLC.indexOf(search) > -1) {
+                        self.allStops()[i].showStop(true);
                         console.log('I am making things true');
                     } else {
-                        self.allStops[i].showStop(false);
+                        self.allStops()[i].showStop(false);
                         console.log('I am making things false');
                     }
                 }
             })
         }
     }, self);
-
-    // self.filterStops = ko.computed(function () {
-    //     console.log(self.searchOfStops());
-    //     if (self.searchOfStops().length === 0 ) {
-    //         self.showAll();
-    //     } else {
-    //         for (var i = 0; i < self.allStops.length; i++) {
-    //             var nameLC = self.allStops[i].toString().toLowerCase();
-    //             console.log(nameLC);
-    //             if (nameLC.indexOf(self.searchOfStops().toLowerCase()) > -1) {
-    //                 self.allStops[i].showStop(true);
-    //             } else {
-    //                 self.allStops[i].showStop(false);
-    //             }
-    //         }
-    //     }
-    // });
-
-    // self.filterStops = ko.computed(function () {
-    //     var search = self.query().toLowerCase();
-    //     console.log(search);
-    //
-    //     if (search.length === 0 ) {
-    //         self.showAll();
-    //     } else {
-    //         for (var i = 0; i < self.allStops.length; i++) {
-    //               if(self.allStops[i].name.toString().toLowerCase().indexOf(search) >= 0) {
-    //                   self.allStops[i].showStop(true);
-    //             } else {
-    //                 self.allStops[i].showStop(false);
-    //             }
-    //         }
-    //     }
-    // });
 
 } //end of ViewModel
 
