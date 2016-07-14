@@ -1,3 +1,9 @@
+/*
+* MODEL: your application’s stored DATA. Collections of models are collections of data.
+* There should be at least 5 locations hard-coded in the model.
+* Model decides content of the application.
+*/
+
 var allStops = [
     {
         name: "Kehillos Yaakov Synagogue",
@@ -97,7 +103,18 @@ var allStops = [
     }
 ];
 
-//PROTOTYPE CONSTRUCTOR
+//GOOGLE MAPS API
+var map, marker, infowindow;
+//create an infowindow outside of the loop so only one window is open at a time
+function initMap() {
+    // Create a map object and specify the DOM element for display.
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 31.714564, lng: 34.990076},
+        zoom: 16,
+    });
+}
+
+//PROTOTYPE
 function Stop(data) {
     this.name = ko.observable(data.name);
     this.lat = ko.observable(data.lat);
