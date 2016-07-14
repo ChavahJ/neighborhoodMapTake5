@@ -46,6 +46,54 @@ var allStops = [
         showStop: true,
         selected: false,
         description: "<strong>Sixth Stop:</strong> Just before the corner of Dolev and Shimshon. ETA is 8:45 AM."
+    },
+    {
+        name: "Bottom of Shimshon",
+        lat: 31.714460,
+        lng: 35.000503,
+        showStop: true,
+        selected: false,
+        description: "<strong>Seventh Stop:</strong> Just before Shimshon intersects with HaYarden. ETA is 8:46 AM."
+    },
+    {
+        name: "HaYarden",
+        lat: 31.710867,
+        lng: 35.001394,
+        showStop: true,
+        selected: false,
+        description: "<strong>Eighth Stop:</strong> Just after the corner of HaYarden and Refa'im. ETA is 8:46 AM."
+    },
+    {
+        name: "HaYarkon",
+        lat: 31.707981,
+        lng: 34.998087,
+        showStop: true,
+        selected: false,
+        description: "<strong>Ninth Stop:</strong> At the midpoint between HaYarden and Luz. ETA is 8:47 AM."
+    },
+    {
+        name: "Bottom of Ayalon Park",
+        lat: 31.711840,
+        lng: 34.990501,
+        showStop: true,
+        selected: false,
+        description: "<strong>Tenth Stop:</strong> After the corner of Ayalon and Kishon. ETA is 8:48 AM."
+    },
+    {
+        name: "Grill Burger",
+        lat: 31.712675,
+        lng: 34.988595,
+        showStop: true,
+        selected: false,
+        description: "<strong>Eleventh Stop:</strong> On the corner of Kishon and Tse'elim. ETA is 8:49 AM."
+    },
+    {
+        name: "Hever",
+        lat: 31.713287,
+        lng: 34.982389,
+        showStop: true,
+        selected: false,
+        description: "<strong>Final Stop:</strong> After the roundabout where Tse'elim and Hever intersect. ETA is 8:50 AM."
     }
 ];
 
