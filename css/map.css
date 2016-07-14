@@ -45,8 +45,19 @@ html, body {
     z-index: 5;
 }
 
-.nh .form-group {
+.form-control {
+    background-color: rgba(255,255,255,0.6);
+    border: 1px solid #547980;
+}
+
+.form-group {
     margin-bottom: .5rem;
+}
+
+.list-group-item {
+    border: none;
+    background-color: rgba(255,255,255,0.6);
+    color: #fff;
 }
 
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
