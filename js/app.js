@@ -105,7 +105,7 @@ var allStops = [
 
 //GOOGLE MAPS API
 var map, marker, infowindow;
-//create an infowindow outside of the loop so only one window is open at a time
+//create an infowindow variable outside of the loop so only one window is open at a time
 function initMap() {
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('map'), {
@@ -122,6 +122,23 @@ function Stop(data) {
     this.showStop = ko.observable(data.showStop);
     this.selected = ko.observable(data.selected);
     this.description = ko.observable(data.description);
+
+    infowindow = new google.maps.InfoWindow();
+
+    marker = new google.maps.Marker({
+        map: map,
+        position: new google.maps.LatLng(data.lat, data.lng),
+        animation: google.maps.Animation.DROP
+    });
+
+    this.marker = marker;
+
+    this.marker.addListener('click', function() {
+        infowindow.setContent('<h3>'+data.name+'</h3>' + '<p>' + data.description + '</p>');
+        infowindow.open(map, this);
+    });
+
+    this.marker.isVisible = ko.observable(true);
 }
 
 /*
@@ -188,4 +205,7 @@ var ViewModel = function() {
 
 } //end of ViewModel
 
-ko.applyBindings(new ViewModel());
+function loadMap() {
+  initMap();
+  ko.applyBindings(new ViewModel());
+}
