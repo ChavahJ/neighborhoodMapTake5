@@ -150,25 +150,19 @@ var ViewModel = function() {
     };
 
     self.filterStops = ko.computed(function () {
-        console.log(self.query());
         var search = self.query().toLowerCase();
-        console.log(search);
 
         if (search.length === 0) {
             self.showAll();
-            console.log('I am showing all');
         } else {
             return ko.utils.arrayFilter(self.allStops(), function(stop) {
 
                 for (var i = 0; i < self.allStops().length; i++) {
                     var nameLC = self.allStops()[i].name().toLowerCase();
-                    console.log(nameLC);
                     if (nameLC.indexOf(search) > -1) {
                         self.allStops()[i].showStop(true);
-                        console.log('I am making things true');
                     } else {
                         self.allStops()[i].showStop(false);
-                        console.log('I am making things false');
                     }
                 }
             })

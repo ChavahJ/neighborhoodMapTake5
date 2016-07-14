@@ -20,7 +20,7 @@ html, body {
 }
 
 .title-div {
-    background-color: rgba(89,79,79,.8);
+    background-color: rgba(69,173,168,.8);
     color: #fff;
     position: absolute;
     width: 100%;
@@ -36,7 +36,7 @@ html, body {
 }
 
 .search-div {
-    background-color: rgba(69,173,168,.8);
+    background-color: rgba(84,121,128,.8);
     display: inline-block;
     color: #fff;
     position: absolute;
@@ -54,6 +54,8 @@ html, body {
     color: #594f4f;
     background-color:#45ada8;
     border-color: #547980;
+    font-weight:700;
+    font-size: 110%;
 }
 
 .pad-2rem {
