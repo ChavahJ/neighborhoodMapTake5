@@ -89,7 +89,6 @@ function initMap() {
         zoom: 16,
     });
 
-    infowindow = new google.maps.InfoWindow();
 }
 
 //PROTOTYPE CONSTRUCTOR
@@ -100,7 +99,7 @@ function Stop(data) {
     this.showStop = ko.observable(true);
     this.selected = ko.observable(false);
     this.description = ko.observable(data.description);
-    this.infoWindow = infowindow;
+    this.infowindow = infowindow;
     this.marker = data.marker;
 }
 
@@ -120,20 +119,21 @@ var ViewModel = function() {
     //BEHAVIOURS
     //Implement a list view of the set of locations
     allStops.forEach(function(stop){
-
+        //instantiate marker before pushing new stop
         var marker = new google.maps.Marker({
             map: map,
             position: new google.maps.LatLng(stop.lat, stop.lng),
             animation: google.maps.Animation.DROP
         });
+
         stop.marker = marker;
+
+        stop.infowindow = new google.maps.InfoWindow();
 
         self.allStops().push( new Stop(stop) );
 
-        marker.addListener('click', function() {
-            infowindow.setContent('<h3>'+stop.name+'</h3>' + '<p>' + stop.description + '</p>');
-            infowindow.open(map, this);
-            //add bounce here
+        stop.marker.addListener('click', function() {
+            self.openWindow(stop);
         });
     });
 
@@ -147,11 +147,20 @@ var ViewModel = function() {
 		}
     };
 
+    self.openWindow = function(stop) {
+        console.log(stop);
+        stop.infowindow.setContent('<h3>'+stop.name+'</h3>' + '<p>' + stop.description + '</p>');
+        stop.infowindow.open(map, this);
+    };
+
     self.selectStop = function(stop) {
         self.unselectAll();
         this.selected(true);
         stop.marker.setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout(function(){ stop.marker.setAnimation(null); }, 1400);
+        setTimeout(function(){
+            stop.marker.setAnimation(null);
+        }, 1400);
+        self.openWindow(stop);
     };
 
 
