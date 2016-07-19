@@ -111,17 +111,13 @@ function Stop(data) {
 * The list view and the markers should update accordingly.
 */
 var ViewModel = function() {
-    //Data
+    //DATA
     var self = this;
     self.googleMap = map;
-    self.googleMarker = marker;
-    self.googleInfoWindow = infowindow;
     self.allStops = ko.observableArray([]);
-    self.chosenStop = ko.observable();
     self.query = ko.observable(''); //holds query
 
-    //Behaviours
-
+    //BEHAVIOURS
     //Implement a list view of the set of locations
     allStops.forEach(function(stop){
 
@@ -135,7 +131,7 @@ var ViewModel = function() {
         self.allStops().push( new Stop(stop) );
 
         marker.addListener('click', function() {
-            infowindow.setContent('<h3>'+stop.name()+'</h3>' + '<p>' + stop.description() + '</p>');
+            infowindow.setContent('<h3>'+stop.name+'</h3>' + '<p>' + stop.description + '</p>');
             infowindow.open(map, this);
             //add bounce here
         });
@@ -148,13 +144,14 @@ var ViewModel = function() {
     self.unselectAll = function() {
         for (var i = 0; i < self.allStops().length; i++) {
 			self.allStops()[i].selected(false);
-            self.allStops()[i].marker.setVisible(false);
 		}
     };
 
     self.selectStop = function(stop) {
         self.unselectAll();
         this.selected(true);
+        stop.marker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function(){ stop.marker.setAnimation(null); }, 1400);
     };
 
 
