@@ -88,6 +88,8 @@ function initMap() {
         center: {lat: 31.714564, lng: 34.990076},
         zoom: 16,
     });
+
+    infowindow = new google.maps.InfoWindow();
 }
 
 //PROTOTYPE CONSTRUCTOR
@@ -99,7 +101,7 @@ function Stop(data) {
     this.selected = ko.observable(false);
     this.description = ko.observable(data.description);
     this.infoWindow = infowindow;
-    this.marker = marker;
+    this.marker = data.marker;
 }
 
 /*
@@ -116,46 +118,37 @@ var ViewModel = function() {
     self.googleInfoWindow = infowindow;
     self.allStops = ko.observableArray([]);
     self.chosenStop = ko.observable();
-    self.isVisible = ko.observable(false);
     self.query = ko.observable(''); //holds query
 
     //Behaviours
 
-    self.isVisible.subscribe(function(currentState) {
-        if (currentState) {
-          marker.setMap(map);
-        } else {
-          marker.setMap(null);
-        }
-    });
-
     //Implement a list view of the set of locations
     allStops.forEach(function(stop){
-        self.allStops().push( new Stop(stop) );
 
-        infowindow = new google.maps.InfoWindow();
-
-        marker = new google.maps.Marker({
+        var marker = new google.maps.Marker({
             map: map,
             position: new google.maps.LatLng(stop.lat, stop.lng),
             animation: google.maps.Animation.DROP
         });
+        stop.marker = marker;
 
-        self.isVisible(true);
+        self.allStops().push( new Stop(stop) );
 
         marker.addListener('click', function() {
-            infowindow.setContent('<h3>'+stop.name+'</h3>' + '<p>' + stop.description + '</p>');
+            infowindow.setContent('<h3>'+stop.name()+'</h3>' + '<p>' + stop.description() + '</p>');
             infowindow.open(map, this);
+            //add bounce here
         });
     });
 
     /* Add functionality to animate a map marker when either the list item associated with it or the map marker itself is selected.
      * Add functionality to open an infoWindow with information
      */
-     //TODO: trigger unselectAll when user clicks off list-div
+     //TODO: trigger unselectAll when user closes infowindow
     self.unselectAll = function() {
         for (var i = 0; i < self.allStops().length; i++) {
 			self.allStops()[i].selected(false);
+            self.allStops()[i].marker.setVisible(false);
 		}
     };
 
@@ -170,36 +163,29 @@ var ViewModel = function() {
     self.showAll = function () {
         for (var i = 0; i < self.allStops().length; i++) {
             self.allStops()[i].showStop(true);
+            self.allStops()[i].marker.setVisible(true);
         }
     };
 
     self.filterStops = ko.computed(function () {
         var search = self.query().toLowerCase();
-
         if (search.length === 0) {
             self.showAll();
-            self.isVisible(true);
         } else {
             return ko.utils.arrayFilter(self.allStops(), function(stop) {
-                //why is this looping so many times? does it matter?
-                //why is only the last marker disappering and appearing?
-                for (var i = 0; i < self.allStops().length; i++) {
-                    var nameLC = self.allStops()[i].name().toLowerCase();
+                    var nameLC = stop.name().toLowerCase();
                     if (nameLC.indexOf(search) > -1) {
-                        self.allStops()[i].showStop(true);
-                        self.isVisible(true);
-                        console.log('setting true');
+                        stop.showStop(true);
+                        stop.marker.setVisible(true);
                     } else {
-                        self.allStops()[i].showStop(false);
-                        self.isVisible(false);
-                        console.log('setting false');
+                        stop.showStop(false);
+                        stop.marker.setVisible(false);
                     }
-                }
             })
         }
     }, self);
 
-} //end of ViewModel
+}; //end of ViewModel
 
 function loadMap() {
   initMap();
