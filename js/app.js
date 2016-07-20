@@ -89,6 +89,7 @@ function initMap() {
         zoom: 16,
     });
 
+    infowindow = new google.maps.InfoWindow();
 }
 
 //PROTOTYPE CONSTRUCTOR
@@ -127,45 +128,53 @@ var ViewModel = function() {
         });
 
         stop.marker = marker;
-
-        stop.infowindow = new google.maps.InfoWindow();
+        stop.infowindow = infowindow;
 
         self.allStops().push( new Stop(stop) );
 
         stop.marker.addListener('click', function() {
             self.openWindow(stop);
         });
+
     });
+
+    self.selectStop = function(stop) {
+        self.unselectAll();
+        stop.selected(true);
+        self.openWindow(stop);
+        console.log(stop);
+    };
 
     /* Add functionality to animate a map marker when either the list item associated with it or the map marker itself is selected.
      * Add functionality to open an infoWindow with information
      */
-     //TODO: trigger unselectAll when user closes infowindow
+
     self.unselectAll = function() {
         for (var i = 0; i < self.allStops().length; i++) {
 			self.allStops()[i].selected(false);
 		}
     };
 
-    self.openWindow = function(stop) {
-        console.log(stop);
-        stop.infowindow.setContent('<h3>'+stop.name+'</h3>' + '<p>' + stop.description + '</p>');
-        stop.infowindow.open(map, this);
-    };
-
-    self.selectStop = function(stop) {
+    //Trigger unselectAll when user closes infowindow
+    google.maps.event.addListener(infowindow, "closeclick", function(){
+        console.log('I am closing');
         self.unselectAll();
-        this.selected(true);
+    });
+
+    self.openWindow = function(stop) {
+        stop.infowindow.setContent('<h3>'+stop.name+'</h3>' + '<p>' + stop.description + '</p>');
+        stop.infowindow.setOptions({ position: new google.maps.LatLng(stop.lat, stop.lng), });
+        stop.infowindow.open(map);
         stop.marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function(){
             stop.marker.setAnimation(null);
         }, 1400);
-        self.openWindow(stop);
     };
-
 
     /* Provide a filter option that uses an input field to filter both the list view
      * and the map markers displayed by default on load.*/
+
+    //need a showAll function for the filteredStops function
     self.showAll = function () {
         for (var i = 0; i < self.allStops().length; i++) {
             self.allStops()[i].showStop(true);
