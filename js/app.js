@@ -223,7 +223,7 @@ var flickrCall = function(){
         console.log(data);
       }).fail(
           function(e) {
-          alert("The Flickr API has encountered an error.  Please try again later." e);
+          alert("The Flickr API has encountered an error.  Please try again later.", e);
       });
 };
 
