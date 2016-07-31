@@ -99,6 +99,7 @@ function Stop(data) {
     this.lng = ko.observable(data.lng);
     this.showStop = ko.observable(true);
     this.selected = ko.observable(false);
+    this.img = ko.observable(data.img);
     this.description = ko.observable(data.description);
     this.infowindow = infowindow;
     this.marker = data.marker;
@@ -162,7 +163,7 @@ var ViewModel = function() {
     });
 
     self.openWindow = function(stop) {
-        stop.infowindow.setContent('<h3>'+stop.name+'</h3>' + '<p>' + stop.description + '</p>');
+        stop.infowindow.setContent('<h3>'+stop.name+'</h3>' + stop.img + '<p>' + stop.description + '</p>');
         stop.infowindow.setOptions({ position: new google.maps.LatLng(stop.lat, stop.lng), });
         stop.infowindow.open(map);
         stop.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -215,16 +216,16 @@ function googleError() {
 };
 
 var flickrCall = function(){
-  var url = "https://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&api_key=51e2ed3ddd2057e96dec88d2328a37fe&user_id=137064132@N04&format=json&jsoncallback=?";
+var url = "https://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&api_key=51e2ed3ddd2057e96dec88d2328a37fe&user_id=137064132@N04&format=json&jsoncallback=?";
 
-  $.getJSON(url
-        ).success(
-          function(data) {
+$.getJSON(url
+    ).success(
+      function(data) {
         console.log(data);
-      }).fail(
-          function(e) {
-          alert("The Flickr API has encountered an error.  Please try again later.", e);
-      });
+    }).fail(
+        function(e) {
+            alert("The Flickr API has encountered an error.  Please try again later.", e);
+        });
 };
 
 flickrCall();
