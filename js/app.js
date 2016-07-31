@@ -206,3 +206,25 @@ function loadMap() {
   initMap();
   ko.applyBindings(new ViewModel());
 }
+
+// In case of error webpage does one of the following:
+// A message is displayed notifying the user that the data can't be loaded,
+// OR There are no negative repercussions to the UI.
+function googleError() {
+    alert("The Google Maps application has encountered an error.  Please try again later.");
+};
+
+var flickrCall = function(){
+  var url = "https://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&api_key=51e2ed3ddd2057e96dec88d2328a37fe&user_id=137064132@N04&format=json&jsoncallback=?";
+
+  $.getJSON(url
+        ).success(
+          function(data) {
+        console.log(data);
+      }).fail(
+          function(e) {
+          alert("The Flickr API has encountered an error.  Please try again later." e);
+      });
+};
+
+flickrCall();
