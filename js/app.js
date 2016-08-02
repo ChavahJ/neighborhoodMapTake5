@@ -105,6 +105,29 @@ function Stop(data) {
     this.marker = data.marker;
 }
 
+//method on prototype: modifying prototype of stop class
+//more efficient, b/c will only create instance once
+//organize code better: constructor function
+//move every funciton that is a properyt of the prototype
+
+Stop.prototype.openWindow = function() {
+    //this is the current instance
+    this.marker
+    this.infowindow.setContent();
+    this.infowindow.open(map, this.marker);
+};
+
+Stop.prototype.getImage = function() {
+    //bounce marker
+    //set content to "loading (open window)
+    //openwindow global
+    //query flickrwith AJAX
+    //when query returns (in success) ==> set content of global infowindow
+    //open that infowindow
+    //bounce marker
+}
+//creates instance of the class from data I pass in
+//
 /*
 * VIEW MODEL/CONTROLLER: a pure-code representation of the data and operations on a UI.
 * Implement a list view of the set of locations defined above.
@@ -130,11 +153,12 @@ var ViewModel = function() {
 
         stop.marker = marker;
         stop.infowindow = infowindow;
+        var stopInstance = new Stop(stop)
 
-        self.allStops().push( new Stop(stop) );
+        self.allStops().push( stopInstance );
 
         stop.marker.addListener('click', function() {
-            self.openWindow(stop);
+            self.openWindow(stopInstance);
         });
 
     });
@@ -163,9 +187,9 @@ var ViewModel = function() {
     });
 
     self.openWindow = function(stop) {
-        stop.infowindow.setContent('<h3>'+stop.name+'</h3>' + stop.img + '<p>' + stop.description + '</p>');
+        stop.infowindow.setContent('<h3>'+stop.name()+'</h3>' + stop.img() + '<p>' + stop.description() + '</p>');
         stop.infowindow.setOptions({ position: new google.maps.LatLng(stop.lat, stop.lng), });
-        stop.infowindow.open(map);
+        stop.infowindow.open(map, stop.marker);//impt to pass marker also
         stop.marker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function(){
             stop.marker.setAnimation(null);
@@ -214,6 +238,7 @@ function loadMap() {
 function googleError() {
     alert("The Google Maps application has encountered an error.  Please try again later.");
 };
+//flickr need to make a new request with each img
 
 var flickrCall = function(){
 var url = "https://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&api_key=51e2ed3ddd2057e96dec88d2328a37fe&user_id=137064132@N04&format=json&jsoncallback=?";
