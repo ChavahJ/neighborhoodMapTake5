@@ -79,6 +79,32 @@ var allStops = [
     }
 ];
 
+//You can construct the source URL to a photo once you know its ID, server ID, farm ID and secret, as returned by many API methods.
+//The URL takes the following format:
+// https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
+//https://www.flickr.com/services/api/explore/flickr.photos.getRecent
+//flickr need to make a new request with each img
+var flickrCall = function(){
+
+var imgURL;
+var url = "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=8b93636d24f88ec1235f57579b38e851&per_page=1&page=1&format=json&nojsoncallback=1&auth_token=72157672682180596-cd4077caf8f613b2&api_sig=719f6c3edd01a506f3caf05ea240728f";
+
+$.getJSON(url
+    ).success(
+      function(data) {
+          $.each(data.items, function(i,item){
+          console.log(item.farm);
+          imgURL = "https://farm" + item.farm + ".staticflickr.com/" + item.server + "/" + item.id + "_" + item.secret + ".jpg";
+          return imgURL;
+      })
+    }).fail(
+        function(e) {
+            alert("The Flickr API has encountered an error.  Please try again later.", e);
+        });
+};
+
+flickrCall();
+
 //GOOGLE MAPS API
 var map, marker, infowindow;
 //create an infowindow variable outside of the loop so only one window is open at a time
@@ -99,7 +125,7 @@ function Stop(data) {
     this.lng = ko.observable(data.lng);
     this.showStop = ko.observable(true);
     this.selected = ko.observable(false);
-    this.img = ko.observable(data.img);
+    this.imgURL = flickrCall();
     this.description = ko.observable(data.description);
     this.infowindow = infowindow;
     this.marker = data.marker;
@@ -108,7 +134,15 @@ function Stop(data) {
 //method on prototype: modifying prototype of stop class
 //more efficient, b/c will only create instance once
 //organize code better: constructor function
-//move every funciton that is a properyt of the prototype
+//move every function that is a property of the prototype
+
+Stop.prototype.bounceMarker = function() {
+    var stop = this;
+    stop.marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function(){
+        stop.marker.setAnimation(null);
+    }, 1400);
+};
 
 Stop.prototype.openWindow = function() {
     //this is the current instance
@@ -117,15 +151,14 @@ Stop.prototype.openWindow = function() {
     this.infowindow.open(map, this.marker);
 };
 
-Stop.prototype.getImage = function() {
-    //bounce marker
-    //set content to "loading (open window)
-    //openwindow global
-    //query flickrwith AJAX
-    //when query returns (in success) ==> set content of global infowindow
-    //open that infowindow
-    //bounce marker
-}
+// Stop.prototype.getImage = function() {
+//     Stop.bounceMarker();
+//     Stop.openWindow();
+//
+//     //when query returns (in success) ==> set content of global infowindow
+//     //open that infowindow
+//     //bounce marker
+// }
 //creates instance of the class from data I pass in
 //
 /*
@@ -186,8 +219,9 @@ var ViewModel = function() {
         self.unselectAll();
     });
 
+//'<img src="' + stop.imgURL() + '">' +
     self.openWindow = function(stop) {
-        stop.infowindow.setContent('<h3>'+stop.name()+'</h3>' + stop.img() + '<p>' + stop.description() + '</p>');
+        stop.infowindow.setContent('<h3>'+stop.name()+'</h3>' + '<p>' + stop.description() + '</p>');
         stop.infowindow.setOptions({ position: new google.maps.LatLng(stop.lat, stop.lng), });
         stop.infowindow.open(map, stop.marker);//impt to pass marker also
         stop.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -238,19 +272,3 @@ function loadMap() {
 function googleError() {
     alert("The Google Maps application has encountered an error.  Please try again later.");
 };
-//flickr need to make a new request with each img
-
-var flickrCall = function(){
-var url = "https://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&api_key=51e2ed3ddd2057e96dec88d2328a37fe&user_id=137064132@N04&format=json&jsoncallback=?";
-
-$.getJSON(url
-    ).success(
-      function(data) {
-        console.log(data);
-    }).fail(
-        function(e) {
-            alert("The Flickr API has encountered an error.  Please try again later.", e);
-        });
-};
-
-flickrCall();
