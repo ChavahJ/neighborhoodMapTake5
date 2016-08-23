@@ -102,9 +102,6 @@ function Stop(data) {
 
     this.marker = marker; //recreate marker for each stop
 
-    this.marker.addListener('click', function() {
-        // call the openWindow() method of this class
-        // on click
         this.openWindow();
     });
 }
