@@ -103,9 +103,9 @@ function Stop(data) {
     this.marker = marker; //recreate marker for each stop
 
     this.marker.addListener('click', function() {
-    // call the openWindow() method of this class
-    // on click
-    data.openWindow();
+        // call the openWindow() method of this class
+        // on click
+        this.openWindow();
     });
 }
 
@@ -118,7 +118,9 @@ function Stop(data) {
 Stop.prototype.openWindow = function() {
     var stop = this; //referring to current instance
     infowindow.setContent('<h3>' + stop.name() + '</h3>' + '<p>' + stop.description() + '</p>');
-    infowindow.setOptions({ position: new google.maps.LatLng(stop.lat, stop.lng), });
+    infowindow.setOptions({
+        position: new google.maps.LatLng(stop.lat, stop.lng),
+    });
     infowindow.open(map, stop.marker); //impt to pass marker also
 
     stop.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -191,7 +193,6 @@ var ViewModel = function() {
 
     //Trigger unselectAll when user closes infowindow
     google.maps.event.addListener(infowindow, "closeclick", function() {
-        console.log('I am closing');
         self.unselectAll();
     });
 
