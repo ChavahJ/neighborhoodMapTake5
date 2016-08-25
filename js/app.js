@@ -90,7 +90,7 @@ function Stop(data) {
     this.lng = ko.observable(data.lng);
     this.showStop = ko.observable(true);
     this.selected = ko.observable(false);
-    this.imgURL = ko.observable('http://placehold.it/240x180?text=ERROR!');
+    this.imgURL = ko.observable('');
     this.callFlickr();
     this.description = ko.observable(data.description);
     this.infowindow = infowindow;
@@ -148,13 +148,14 @@ Stop.prototype.callFlickr = function() {
 "jsonFlickrApi({"photos":{"page":1,"pages":1000,"perpage":1,"total":1000,"photo":[{"id":"29152151301","owner":"80966990@N06","secret":"c085699970","server":"8111","farm":9,"title":"Blossom","ispublic":1,"isfriend":0,"isfamily":0}]},"stat":"ok"})"
 https://farm9.static.flickr.com/8111/29152151301_c085699970_m.jpg
 */
-    $.getJSON(url
-        ).success(function(data) {
-            var photoURL = 'https://farm' + data.farm + '.static.flickr.com/' + data.server + '/' + data.id + '_' + data.secret + '_m.jpg'
+    $.getJSON(url)
+    .success(function(data) {
+        $.each(data.photos.photo, function( i, item ) {
+            var photoURL = 'https://farm' + data.farm + '.static.flickr.com/' + data.server + '/' + data.id + '_' + data.secret + '_m.jpg';
             stop.imgURL(photoURL);
-            }
-        ).fail(
-        function(e) {
+        });
+    })
+    .fail(function(e) {
             console.log("The Flickr API has encountered an error.  Please try again later.", e);
             stop.imgURL("http://placehold.it/240x180?text=ERROR!");
         });
