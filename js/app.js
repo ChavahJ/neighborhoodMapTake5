@@ -3,7 +3,6 @@
  * TASK: There should be at least 5 locations hard-coded in the model.
  * Model decides content of the application.
  */
-
 var allStops = [{
     name: "Kehillos Yaakov Synagogue",
     lat: 31.714564,
@@ -91,7 +90,6 @@ function Stop(data) {
     this.showStop = ko.observable(true);
     this.selected = ko.observable(false);
     this.imgURL = ko.observable('');
-    this.callFlickr();
     this.description = ko.observable(data.description);
     this.infowindow = infowindow;
     var marker = new google.maps.Marker({
@@ -114,6 +112,7 @@ function Stop(data) {
  */
 Stop.prototype.openWindow = function() {
     var stop = this; //referring to current instance
+    this.callFlickr();
     infowindow.setContent('<h3>' + stop.name() + '</h3>' + '<img src="' + stop.imgURL + '"><p>' + stop.description() + '</p>');
     infowindow.setOptions({
         position: new google.maps.LatLng(stop.lat, stop.lng),
@@ -127,38 +126,41 @@ Stop.prototype.openWindow = function() {
     }, 1400);
 };
 
-//You can construct the source URL to a photo once you know its ID, server ID, farm ID and secret, as returned by many API methods.
-//The URL takes the following format:
-// https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
-//https://www.flickr.com/services/api/explore/flickr.photos.getRecent
+/* You can construct the source URL to a photo once you know its ID, server ID,
+ * farm ID and secret, as returned by many API methods. The URL takes the
+ * following format: https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
+ * https://www.flickr.com/services/api/explore/flickr.photos.getRecent
+ */
 
 //flickr need to make a new request with each img
 Stop.prototype.callFlickr = function() {
-    console.log('inside click call')
     var stop = this;
-    var url = "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=6d5c5a20d108f8f56f324394d3e2381f&per_page=1&format=json&auth_token=72157672955403125-359d44199075df02&api_sig=ab948363ad270e81d5418f70bcff517c";
-
-    // call flickr here
-    // i.e. $.getJSON(...)
-    // deep inside getJSON update the imgURL observable:
-    // stop.imgURL(url_of_flickr_image);
-
-/* Examples of data returned
-"jsonFlickrApi({"photos":{"page":1,"pages":1000,"perpage":1,"total":1000,"photo":[{"id":"29230325565","owner":"135240772@N03","secret":"669999652d","server":"8436","farm":9,"title":" Last days of holidays","ispublic":1,"isfriend":0,"isfamily":0}]},"stat":"ok"})"
-"jsonFlickrApi({"photos":{"page":1,"pages":1000,"perpage":1,"total":1000,"photo":[{"id":"29152151301","owner":"80966990@N06","secret":"c085699970","server":"8111","farm":9,"title":"Blossom","ispublic":1,"isfriend":0,"isfamily":0}]},"stat":"ok"})"
-https://farm9.static.flickr.com/8111/29152151301_c085699970_m.jpg
-*/
-    $.getJSON(url)
-    .success(function(data) {
-        $.each(data.photos.photo, function( i, item ) {
-            var photoURL = 'https://farm' + data.farm + '.static.flickr.com/' + data.server + '/' + data.id + '_' + data.secret + '_m.jpg';
+    $.ajax({
+        url: "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=6d5c5a20d108f8f56f324394d3e2381f&per_page=1",
+        jsonp: "jsoncallback",
+        dataType: "jsonp",
+        data: {
+            format: "json"
+        },
+        // Work with the response
+        success: function(data) {
+            console.log(data); // server response
+            var photoURL = 'https://farm' + data.photos.photo["0"].farm + '.static.flickr.com/' + data.photos.photo["0"].server + '/' + data.photos.photo["0"].id + '_' + data.photos.photo["0"].secret + '_q.jpg';
+            console.log(photoURL);
             stop.imgURL(photoURL);
-        });
-    })
-    .fail(function(e) {
-            console.log("The Flickr API has encountered an error.  Please try again later.", e);
-            stop.imgURL("http://placehold.it/240x180?text=ERROR!");
-        });
+        }
+    });
+    // $.getJSON(url)
+    // .success(function(data) {
+    //     $.each(data.photos.photo, function( i, item ) {
+    //         var photoURL = 'https://farm' + data.farm + '.static.flickr.com/' + data.server + '/' + data.id + '_' + data.secret + '_m.jpg';
+    //         stop.imgURL(photoURL);
+    //     });
+    // })
+    // .fail(function(e) {
+    //         console.log("The Flickr API has encountered an error.  Please try again later.", e);
+    //         stop.imgURL("http://placehold.it/240x180?text=ERROR!");
+    //     });
 };
 
 /*
