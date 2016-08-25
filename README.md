@@ -5,7 +5,7 @@ Download this repository to your computer, and open the index.html file in any b
 
 ####Or:####
 
-Go here.
+[Go here](https://chavahj.github.io/neighborhoodMapTake5/).
 
 
 ##To Complete This Project##
