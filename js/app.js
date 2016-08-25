@@ -136,7 +136,7 @@ Stop.prototype.openWindow = function() {
 Stop.prototype.callFlickr = function() {
     var stop = this;
     $.ajax({
-        url: "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=6d5c5a20d108f8f56f324394d3e2381f&per_page=1",
+        url: "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=6d5c5a20d108f8f56f324394d3e2381f&per_page=1&extras=tags%3Dstreet",
         jsonp: "jsoncallback",
         dataType: "jsonp",
         data: {
