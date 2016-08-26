@@ -91,6 +91,14 @@ html, body {
     font-weight: 400;
 }
 
+.info-window-container {
+    max-width: 320px;
+}
+
+.info-window-container p {
+    font-size: 130%;
+}
+
 @media (min-width: 640px) {
     .search-div {
         width: 49%;
@@ -102,6 +110,10 @@ html, body {
         right: 0;
         width: 49%;
         padding: 1rem;
+    }
+
+    .info-window-container {
+        max-width: 480px;
     }
 }
 
@@ -123,6 +135,7 @@ html, body {
         font-size: 115%;
         line-height: 1.5;
     }
+
 }
 
 
@@ -158,6 +171,7 @@ html, body {
         font-size: 140%;
         line-height: 1.5;
     }
+
 }
 
 @media (min-width: 1400px) {

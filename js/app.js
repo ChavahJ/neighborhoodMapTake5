@@ -7,62 +7,86 @@ var allStops = [{
     name: "Kehillos Yaakov Synagogue",
     lat: 31.714564,
     lng: 34.990076,
-    description: "<strong>First Stop:</strong> Just above the the corner of Kishon and Sorek. ETA is 8:40 AM."
+    stopName: "First Stop:",
+    description: "Just above the the corner of Kishon and Sorek.",
+    eta: "ETA is 8:40 AM."
 }, {
     name: "Bar Col",
     lat: 31.714856,
     lng: 34.993992,
-    description: "<strong>Second Stop:</strong> Just after the corner where the bottom of Lachish and Sorek meet. ETA is 8:41 AM."
+    stopName: "Second Stop:",
+    description: "Just after the corner where the bottom of Lachish and Sorek meet.",
+    eta: "ETA is 8:41 AM."
 }, {
     name: "Top of Ayalon Park",
     lat: 31.713816,
     lng: 34.996277,
-    description: "<strong>Third Stop:</strong> Just after where the top of Lachish intersects with Sorek. ETA is 8:42 AM."
+    stopName: "Third Stop:",
+    description: "Just after where the top of Lachish intersects with Sorek.",
+    eta: "ETA is 8:42 AM."
 }, {
     name: "Top of Ayalon Street",
     lat: 31.712900,
     lng: 34.997843,
-    description: "<strong>Fourth Stop:</strong> Where Ayalon and Dolev intersect, near Best Market. ETA is 8:43 AM."
+    stopName: "Fourth Stop:",
+    description: "Where Ayalon and Dolev intersect, near Best Market/Park Center.",
+    eta: "ETA is 8:43 AM."
 }, {
     name: "North Dolev",
     lat: 31.715687,
     lng: 34.998155,
-    description: "<strong>Fifth Stop:</strong> Just before Dolev and Katlav meet. ETA is 8:44 AM."
+    stopName: "Fifth Stop:",
+    description: "Just before Dolev and Katlav meet.",
+    eta: "ETA is 8:44 AM."
 }, {
     name: "Top of Dolev",
     lat: 31.712247,
     lng: 34.999441,
-    description: "<strong>Sixth Stop:</strong> Just before the corner of Dolev and Shimshon. ETA is 8:45 AM."
+    stopName: "Sixth Stop:",
+    description: "Just before the corner of Dolev and Shimshon.",
+    eta: "ETA is 8:45 AM."
 }, {
     name: "Bottom of Shimshon",
     lat: 31.714460,
     lng: 35.000503,
-    description: "<strong>Seventh Stop:</strong> Just before Shimshon intersects with HaYarden. ETA is 8:46 AM."
+    stopName: "Seventh Stop:",
+    description: "Just before Shimshon intersects with HaYarden.",
+    eta: "ETA is 8:46 AM."
 }, {
     name: "HaYarden",
     lat: 31.710867,
     lng: 35.001394,
-    description: "<strong>Eighth Stop:</strong> Just after the corner of HaYarden and Refa'im. ETA is 8:46 AM."
+    stopName: "Eighth Stop:",
+    description: "Just after the corner of HaYarden and Refa'im.",
+    eta: "ETA is 8:46 AM."
 }, {
     name: "HaYarkon",
     lat: 31.707981,
     lng: 34.998087,
-    description: "<strong>Ninth Stop:</strong> At the midpoint between HaYarden and Luz. ETA is 8:47 AM."
+    stopName: "Ninth Stop:",
+    description: "At the midpoint between HaYarden and Luz.",
+    eta: "ETA is 8:47 AM"
 }, {
     name: "Bottom of Ayalon Park",
     lat: 31.711840,
     lng: 34.990501,
-    description: "<strong>Tenth Stop:</strong> After the corner of Ayalon and Kishon. ETA is 8:48 AM."
+    stopName: "Tenth Stop:",
+    description: "After the corner of Ayalon and Kishon.",
+    eta: "ETA is 8:48 AM."
 }, {
     name: "Grill Burger",
     lat: 31.712675,
     lng: 34.988595,
-    description: "<strong>Eleventh Stop:</strong> On the corner of Kishon and Tse'elim. ETA is 8:49 AM."
+    stopName: "Eleventh Stop:",
+    description: "On the corner of Kishon and Tse'elim.",
+    eta: "ETA is 8:49 AM."
 }, {
     name: "Hever",
     lat: 31.713287,
     lng: 34.982389,
-    description: "<strong>Final Stop:</strong> After the roundabout where Tse'elim and Hever intersect. ETA is 8:50 AM."
+    stopName: "Final Stop:",
+    description: "After the roundabout where Tse'elim and Hever intersect.",
+    eta: "ETA is 8:50 AM."
 }];
 
 //GOOGLE MAPS API
@@ -89,8 +113,10 @@ function Stop(data) {
     this.lng = ko.observable(data.lng);
     this.showStop = ko.observable(true);
     this.selected = ko.observable(false);
-    this.imgURL = ko.observable('');
+    this.imgURL = ko.observable('error.JPG');
+    this.stopName = ko.observable(data.stopName);
     this.description = ko.observable(data.description);
+    this.eta = ko.observable(data.eta);
     this.infowindow = infowindow;
     var marker = new google.maps.Marker({
         map: map,
@@ -100,7 +126,7 @@ function Stop(data) {
 
     this.marker = marker; //recreate marker for each stop instance
 
-    this.marker.addListener('click', function(e) {
+    this.marker.addListener(this.marker, 'click', function(infowindow) {
         this.openWindow();
     });
 }
@@ -112,8 +138,32 @@ function Stop(data) {
  */
 Stop.prototype.openWindow = function() {
     var stop = this; //referring to current instance
-    this.callFlickr();
-    infowindow.setContent('<h3>' + stop.name() + '</h3>' + '<img src="' + stop.imgURL + '"><p>' + stop.description() + '</p>');
+
+    /* You can construct the source URL to a photo once you know its ID, server ID,
+     * farm ID and secret, as returned by many API methods. The URL takes the
+     * following format: https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
+     * https://www.flickr.com/services/api/explore/flickr.photos.getRecent
+     * http://api.jquery.com/jquery.getjson/
+     */
+    $.ajax({
+        url: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=c9023708225bd2bb6602b8bd8d8deeb7&tags=flowers&per_page=20",
+        tags: "israel",
+        jsonp: "jsoncallback",
+        dataType: "jsonp",
+        data: {
+            format: "json"
+        },
+        // Work with the response
+        success: function(data) {
+            var randomNumber = Math.floor((Math.random() * 20) + 1);
+            console.log(data); // server response
+            var photoURL = 'https://farm' + data.photos.photo[randomNumber].farm + '.static.flickr.com/' + data.photos.photo[randomNumber].server + '/' + data.photos.photo[randomNumber].id + '_' + data.photos.photo[randomNumber].secret + '_q.jpg';
+            console.log(photoURL);
+            stop.imgURL(photoURL);
+        }
+    });
+
+    infowindow.setContent('<div class="container info-window-container"><h2>' + stop.name() + '</h2><div class="row"><div class="col-xs-12 col-sm-6 col-lg-5"><img class="img-responsive" src="' + stop.imgURL() + '"></div><div class="col-xs-12 col-sm-6 col-lg-7"><h4>' + stop.stopName() + '</h4><p>' + stop.description() + '</p><p><strong>' + stop.eta() + '</strong></p></div></div></div>');
     infowindow.setOptions({
         position: new google.maps.LatLng(stop.lat, stop.lng),
     });
@@ -124,43 +174,6 @@ Stop.prototype.openWindow = function() {
     setTimeout(function() {
         stop.marker.setAnimation(null);
     }, 1400);
-};
-
-/* You can construct the source URL to a photo once you know its ID, server ID,
- * farm ID and secret, as returned by many API methods. The URL takes the
- * following format: https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
- * https://www.flickr.com/services/api/explore/flickr.photos.getRecent
- */
-
-//flickr need to make a new request with each img
-Stop.prototype.callFlickr = function() {
-    var stop = this;
-    $.ajax({
-        url: "https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=6d5c5a20d108f8f56f324394d3e2381f&per_page=1&extras=tags%3Dstreet",
-        jsonp: "jsoncallback",
-        dataType: "jsonp",
-        data: {
-            format: "json"
-        },
-        // Work with the response
-        success: function(data) {
-            console.log(data); // server response
-            var photoURL = 'https://farm' + data.photos.photo["0"].farm + '.static.flickr.com/' + data.photos.photo["0"].server + '/' + data.photos.photo["0"].id + '_' + data.photos.photo["0"].secret + '_q.jpg';
-            console.log(photoURL);
-            stop.imgURL(photoURL);
-        }
-    });
-    // $.getJSON(url)
-    // .success(function(data) {
-    //     $.each(data.photos.photo, function( i, item ) {
-    //         var photoURL = 'https://farm' + data.farm + '.static.flickr.com/' + data.server + '/' + data.id + '_' + data.secret + '_m.jpg';
-    //         stop.imgURL(photoURL);
-    //     });
-    // })
-    // .fail(function(e) {
-    //         console.log("The Flickr API has encountered an error.  Please try again later.", e);
-    //         stop.imgURL("http://placehold.it/240x180?text=ERROR!");
-    //     });
 };
 
 /*
