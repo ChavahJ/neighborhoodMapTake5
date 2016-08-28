@@ -113,11 +113,10 @@ function Stop(data) {
     this.lng = ko.observable(data.lng);
     this.showStop = ko.observable(true);
     this.selected = ko.observable(false);
-    this.imgURL = ko.observable('img/error.jpg');
+    this.imgURL = ko.observable('');
     this.stopName = ko.observable(data.stopName);
     this.description = ko.observable(data.description);
     this.eta = ko.observable(data.eta);
-    this.infowindow = infowindow;
     var marker = new google.maps.Marker({
         map: map,
         position: new google.maps.LatLng(data.lat, data.lng),
@@ -125,10 +124,14 @@ function Stop(data) {
     });
 
     this.marker = marker; //recreate marker for each stop instance
-
+    this.marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function() {
+        stop.marker.setAnimation(null);
+    }, 1400);
     this.marker.addListener('click', function() {
-        map.setZoom(16);
+        map.setZoom(17);
         map.setCenter(marker.getPosition());
+        this.openWindow();//TODO: get this working
     });
 }
 
@@ -137,15 +140,24 @@ function Stop(data) {
  * TASK: Add functionality to animate a map marker when either the list item associated with it or the map marker itself is selected.
  * TASK: Add functionality to open an infoWindow with information
  */
-Stop.prototype.openWindow = function() {
+
+Stop.prototype.flickrCall = function() {
     var stop = this; //referring to current instance
+
+    var openWindow = function() {
+        infowindow.setContent('<div class="info-window-container"><p><img class="img-thumbnail" src="' + stop.imgURL() + '"><span class="stop-name">' + stop.name() + '</span></p><p><strong>' + stop.stopName() + '</strong> ' + stop.description() + '<br><strong>' + stop.eta() + '</strong></p><p class="small">Picture source: <a href="https://www.flickr.com/">Flickr</a></p>');
+
+        infowindow.open(map, stop.marker); //impt to pass marker also
+     };
+
     /* You can construct the source URL to a photo once you know its ID, server ID,
      * farm ID and secret, as returned by many API methods. The URL takes the
      * following format: https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
      * https://www.flickr.com/services/api/explore/flickr.photos.search
+     * https://learn.jquery.com/ajax/working-with-jsonp/
      */
     $.ajax({
-        url: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=01ba3f37c9b38dd927ac8105c1ec5e97&tags=flowers&per_page=20",
+        url: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=01ba3f37c9b38dd927ac8105c1ec5e97&tags=flowers",
         jsonp: "jsoncallback",
         dataType: "jsonp",
         data: {
@@ -153,29 +165,23 @@ Stop.prototype.openWindow = function() {
         },
         // Work with the response
         success: function(data) {
-            var randomNumber = Math.floor((Math.random() * 20) + 1);
+            console.log('in success');
+            var randomNumber = Math.floor((Math.random() * 100) + 1);
             console.log(data); // server response
             var photoURL = 'https://farm' + data.photos.photo[randomNumber].farm + '.static.flickr.com/' + data.photos.photo[randomNumber].server + '/' + data.photos.photo[randomNumber].id + '_' + data.photos.photo[randomNumber].secret + '_s.jpg';
-            console.log(photoURL);
             stop.imgURL(photoURL);
+            console.log(stop.imgURL());
+            openWindow(data);
         },
-        fail: function (data, e){
+        error: function (data, e){
             console.log('in fail');
             stop.imgURL('img/error.jpg');
+            //TODO: why isn't the error message sent?
+        },
+        complete: function (e) {
+            console.log('completed event');
         }
     });
-
-    infowindow.setContent('<div class="info-window-container"><p><img class="img-thumbnail" src="' + stop.imgURL() + '"><span class="stop-name">' + stop.name() + '</span></p><p><strong>' + stop.stopName() + '</strong> ' + stop.description() + '<br><strong>' + stop.eta() + '</strong></p><p class="small">Picture source: <a href="https://www.flickr.com/">Flickr</a></p>');
-    infowindow.setOptions({
-        position: new google.maps.LatLng(stop.lat, stop.lng),
-    });
-
-    infowindow.open(map, stop.marker); //impt to pass marker also
-
-    stop.marker.setAnimation(google.maps.Animation.BOUNCE);
-    setTimeout(function() {
-        stop.marker.setAnimation(null);
-    }, 1400);
 };
 
 /*
@@ -202,7 +208,9 @@ var ViewModel = function() {
     self.selectStop = function(stop) {
         self.unselectAll();
         stop.selected(true);
-        stop.openWindow();
+        stop.flickrCall();
+        $('.navbar-collapse').collapse('hide');
+        //TODO: zoom and center on infowindow onclick
     };
 
     self.unselectAll = function() {
@@ -210,6 +218,7 @@ var ViewModel = function() {
             self.allStops()[i].selected(false);
         }
     };
+
 
     //Trigger unselectAll when user closes infowindow
     google.maps.event.addListener(infowindow, "closeclick", function() {
