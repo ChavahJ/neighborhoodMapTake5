@@ -124,14 +124,11 @@ function Stop(data) {
     });
 
     this.marker = marker; //recreate marker for each stop instance
-    this.marker.setAnimation(google.maps.Animation.BOUNCE);
-    setTimeout(function() {
-        stop.marker.setAnimation(null);
-    }, 1400);
+
     this.marker.addListener('click', function() {
         map.setZoom(17);
         map.setCenter(marker.getPosition());
-        this.openWindow();//TODO: get this working
+        this.flickrCall(); //TODO: get this working
     });
 }
 
@@ -144,11 +141,16 @@ function Stop(data) {
 Stop.prototype.flickrCall = function() {
     var stop = this; //referring to current instance
 
+    this.marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function() {
+        stop.marker.setAnimation(null);
+    }, 1400);
+
     var openWindow = function() {
         infowindow.setContent('<div class="info-window-container"><p><img class="img-thumbnail" src="' + stop.imgURL() + '"><span class="stop-name">' + stop.name() + '</span></p><p><strong>' + stop.stopName() + '</strong> ' + stop.description() + '<br><strong>' + stop.eta() + '</strong></p><p class="small">Picture source: <a href="https://www.flickr.com/">Flickr</a></p>');
 
         infowindow.open(map, stop.marker); //impt to pass marker also
-     };
+    };
 
     /* You can construct the source URL to a photo once you know its ID, server ID,
      * farm ID and secret, as returned by many API methods. The URL takes the
@@ -173,12 +175,12 @@ Stop.prototype.flickrCall = function() {
             console.log(stop.imgURL());
             openWindow(data);
         },
-        error: function (data, e){
+        error: function(data, e) {
             console.log('in fail');
             stop.imgURL('img/error.jpg');
             //TODO: why isn't the error message sent?
         },
-        complete: function (e) {
+        complete: function(e) {
             console.log('completed event');
         }
     });
@@ -218,7 +220,6 @@ var ViewModel = function() {
             self.allStops()[i].selected(false);
         }
     };
-
 
     //Trigger unselectAll when user closes infowindow
     google.maps.event.addListener(infowindow, "closeclick", function() {
