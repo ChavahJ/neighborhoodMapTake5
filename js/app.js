@@ -96,10 +96,10 @@ function initMap() {
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 31.714564,
-            lng: 34.990076
+            lat: 31.713816,
+            lng: 34.996277
         },
-        zoom: 16,
+        zoom: 15,
     });
 
     infowindow = new google.maps.InfoWindow();
@@ -113,7 +113,7 @@ function Stop(data) {
     this.lng = ko.observable(data.lng);
     this.showStop = ko.observable(true);
     this.selected = ko.observable(false);
-    this.imgURL = ko.observable('error.JPG');
+    this.imgURL = ko.observable('img/error.jpg');
     this.stopName = ko.observable(data.stopName);
     this.description = ko.observable(data.description);
     this.eta = ko.observable(data.eta);
@@ -126,8 +126,9 @@ function Stop(data) {
 
     this.marker = marker; //recreate marker for each stop instance
 
-    this.marker.addListener(this.marker, 'click', function(infowindow) {
-        this.openWindow();
+    this.marker.addListener('click', function() {
+        map.setZoom(16);
+        map.setCenter(marker.getPosition());
     });
 }
 
@@ -138,16 +139,13 @@ function Stop(data) {
  */
 Stop.prototype.openWindow = function() {
     var stop = this; //referring to current instance
-
     /* You can construct the source URL to a photo once you know its ID, server ID,
      * farm ID and secret, as returned by many API methods. The URL takes the
      * following format: https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
-     * https://www.flickr.com/services/api/explore/flickr.photos.getRecent
-     * http://api.jquery.com/jquery.getjson/
+     * https://www.flickr.com/services/api/explore/flickr.photos.search
      */
     $.ajax({
-        url: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=c9023708225bd2bb6602b8bd8d8deeb7&tags=flowers&per_page=20",
-        tags: "israel",
+        url: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=01ba3f37c9b38dd927ac8105c1ec5e97&tags=flowers&per_page=20",
         jsonp: "jsoncallback",
         dataType: "jsonp",
         data: {
@@ -157,13 +155,17 @@ Stop.prototype.openWindow = function() {
         success: function(data) {
             var randomNumber = Math.floor((Math.random() * 20) + 1);
             console.log(data); // server response
-            var photoURL = 'https://farm' + data.photos.photo[randomNumber].farm + '.static.flickr.com/' + data.photos.photo[randomNumber].server + '/' + data.photos.photo[randomNumber].id + '_' + data.photos.photo[randomNumber].secret + '_q.jpg';
+            var photoURL = 'https://farm' + data.photos.photo[randomNumber].farm + '.static.flickr.com/' + data.photos.photo[randomNumber].server + '/' + data.photos.photo[randomNumber].id + '_' + data.photos.photo[randomNumber].secret + '_s.jpg';
             console.log(photoURL);
             stop.imgURL(photoURL);
+        },
+        fail: function (data, e){
+            console.log('in fail');
+            stop.imgURL('img/error.jpg');
         }
     });
 
-    infowindow.setContent('<div class="container info-window-container"><h2>' + stop.name() + '</h2><div class="row"><div class="col-xs-12 col-sm-6 col-lg-5"><img class="img-responsive" src="' + stop.imgURL() + '"></div><div class="col-xs-12 col-sm-6 col-lg-7"><h4>' + stop.stopName() + '</h4><p>' + stop.description() + '</p><p><strong>' + stop.eta() + '</strong></p></div></div></div>');
+    infowindow.setContent('<div class="info-window-container"><p><img class="img-thumbnail" src="' + stop.imgURL() + '"><span class="stop-name">' + stop.name() + '</span></p><p><strong>' + stop.stopName() + '</strong> ' + stop.description() + '<br><strong>' + stop.eta() + '</strong></p><p class="small">Picture source: <a href="https://www.flickr.com/">Flickr</a></p>');
     infowindow.setOptions({
         position: new google.maps.LatLng(stop.lat, stop.lng),
     });

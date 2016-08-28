@@ -18,26 +18,33 @@
         <div class="map-container">
             <div id="map"></div>
         </div>
-        <div class="title-div">
-            <h1 class="title-text">NMI Transport</h1>
-        </div>
-
-        <div class="search-div">
-            <div class="form-group pad-2rem">
-                <input type="text" placeholder="Find a stop..." data-bind="textInput: query" class="form-control" />
+        <div class="row flexContainer">
+            <div class="title-div col-xs-12 col-sm-4">
+                <h1 class="title-text">NMI Transport</h1>
+            </div>
+            <div class="search-div col-xs-12 col-sm-4">
+                <div class="input-group">
+                    <input type="text" placeholder="Find a stop..." data-bind="textInput: query" class="form-control" />
+                </div>
+            </div>
+            <div class="list-div col-xs-12 col-sm-4">
+                <div class="nav-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#listOfStops" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <img src="img/hamburger-menu.svg">
+                  </button>
+                  <a class="list-title" href="#">Which stop is best for you?</a>
+                </div>
+                <div class="collapse navbar-collapse" id="listOfStops">
+                <ul class="nav list-group allStops" aria-labelledby="listMenu" data-bind="foreach: allStops">
+                    <li><a href="#" class="list-group-item" data-bind="text: name, visible: showStop, css: { active: selected }, click: $parent.selectStop"></a></li>
+                </ul>
+                </div><!-- /.navbar-collapse -->
             </div>
         </div>
-
-        <div class="list-div">
-            <p><span class="list-title">Which stop is best for you?</span>
-                <div class="list-group allStops" data-bind="foreach: allStops">
-                    <a href="#" class="list-group-item" data-bind="text: name, visible: showStop, css: { active: selected }, click: $parent.selectStop"></a>
-                </div>
-            </p>
-        </div>
-
     </div><!-- end of container -->
 </body>
+
 <footer>
     <script src="js/jquery-2.2.4.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
