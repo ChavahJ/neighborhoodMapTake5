@@ -1,7 +1,7 @@
 ##To Run This Application##
 ####Either:####
 
-Download this repository to your computer, and open the index.html file in any browser,
+Download this repository to your computer, and open the index.html file in any browser; you might need to replace the API key from Flickr in this case.
 
 ####Or:####
 
