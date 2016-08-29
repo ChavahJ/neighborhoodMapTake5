@@ -100,6 +100,7 @@ function initMap() {
             lng: 34.996277
         },
         zoom: 15,
+        scrollwheel: false
     });
 
     infowindow = new google.maps.InfoWindow();
