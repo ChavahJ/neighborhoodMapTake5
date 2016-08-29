@@ -126,9 +126,7 @@ function Stop(data) {
     this.marker = marker; //recreate marker for each stop instance
 
     this.marker.addListener('click', function() {
-        map.setZoom(17);
-        map.setCenter(marker.getPosition());
-        this.flickrCall(); //TODO: get this working
+        stop.flickrCall();
     });
 }
 
@@ -146,8 +144,11 @@ Stop.prototype.flickrCall = function() {
         stop.marker.setAnimation(null);
     }, 1400);
 
+    map.setZoom(17);
+    map.panTo(stop.marker.getPosition());
+
     var openWindow = function() {
-        infowindow.setContent('<div class="info-window-container"><p><img class="img-thumbnail" src="' + stop.imgURL() + '"><span class="stop-name">' + stop.name() + '</span></p><p><strong>' + stop.stopName() + '</strong> ' + stop.description() + '<br><strong>' + stop.eta() + '</strong></p><p class="small">Picture source: <a href="https://www.flickr.com/">Flickr</a></p>');
+        infowindow.setContent('<p><img class="img-thumbnail" src="' + stop.imgURL() + '"><span class="stop-name">' + stop.name() + '</span></p><p><strong>' + stop.stopName() + '</strong> ' + stop.description() + '<br><strong>' + stop.eta() + '</strong></p><p class="small">Picture source: <a href="https://www.flickr.com/">Flickr</a></p>');
 
         infowindow.open(map, stop.marker); //impt to pass marker also
     };
@@ -156,10 +157,13 @@ Stop.prototype.flickrCall = function() {
      * farm ID and secret, as returned by many API methods. The URL takes the
      * following format: https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
      * https://www.flickr.com/services/api/explore/flickr.photos.search
+     * api_key=9e2c944d1d3ed0d11cd8884984f82b0a
+     * auth_token=72157673144998585-93ed44225a697585
+     * api_sig=6b51eec9573bedb0a4421cba48de7451
      * https://learn.jquery.com/ajax/working-with-jsonp/
      */
     $.ajax({
-        url: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=01ba3f37c9b38dd927ac8105c1ec5e97&tags=flowers",
+        url: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=9e2c944d1d3ed0d11cd8884984f82b0a&tags=flowers",
         jsonp: "jsoncallback",
         dataType: "jsonp",
         data: {
@@ -167,22 +171,22 @@ Stop.prototype.flickrCall = function() {
         },
         // Work with the response
         success: function(data) {
-            console.log('in success');
+            // console.log('in success');
             var randomNumber = Math.floor((Math.random() * 100) + 1);
-            console.log(data); // server response
+            // console.log(data); // server response
             var photoURL = 'https://farm' + data.photos.photo[randomNumber].farm + '.static.flickr.com/' + data.photos.photo[randomNumber].server + '/' + data.photos.photo[randomNumber].id + '_' + data.photos.photo[randomNumber].secret + '_s.jpg';
             stop.imgURL(photoURL);
-            console.log(stop.imgURL());
+            // console.log(stop.imgURL());
             openWindow(data);
         },
         error: function(data, e) {
-            console.log('in fail');
+            // console.log('in fail');
             stop.imgURL('img/error.jpg');
-            //TODO: why isn't the error message sent?
-        },
-        complete: function(e) {
-            console.log('completed event');
-        }
+            openWindow(data);
+        }//,
+        // complete: function(e) {
+        //     console.log('completed event');
+        // }
     });
 };
 
@@ -212,7 +216,6 @@ var ViewModel = function() {
         stop.selected(true);
         stop.flickrCall();
         $('.navbar-collapse').collapse('hide');
-        //TODO: zoom and center on infowindow onclick
     };
 
     self.unselectAll = function() {
