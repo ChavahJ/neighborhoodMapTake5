@@ -4,12 +4,15 @@ body {
     margin: 0;
     padding: 0;
 }
+
 .container-fluid {
     padding: 0;
 }
+
 #map {
-    height: calc(100% - 17rem);
+    height: 100%;
 }
+
 .map-container {
     height: 100%;
     width: 100%;
@@ -17,23 +20,24 @@ body {
     top: 17rem;
     background-color: #ccc;
 }
+
 .flex-container {
     display: flex;
     flex-direction: row;
 }
+
 .title-div {
     background-color: rgba(69, 173, 168, .9);
     color: #fff;
     z-index: 5;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
+
 .title-text {
     font-weight: 700;
     text-align: center;
     font-size: 130%;
 }
+
 .search-div {
     background-color: rgba(69, 173, 168, .9);
     color: #fff;
@@ -43,13 +47,16 @@ body {
     justify-content: center;
     padding: 1rem 2rem;
 }
+
 .input-group {
     width: 100%;
 }
+
 .form-control {
     background-color: rgba(255, 255, 255, 0.6);
     border: 1px solid #547980;
 }
+
 .list-div {
     background-color: rgba(84, 121, 128, .8);
     color: #fff;
@@ -58,6 +65,7 @@ body {
     flex-direction: column;
     justify-content: center;
 }
+
 .list-title {
     color: #fff;
     text-decoration: none;
@@ -66,20 +74,24 @@ body {
     font-size: 120%;
     padding: 2rem 1rem;
 }
+
 .list-title:hover,
 .list-title:focus {
     color: #fff;
     text-decoration: none;
 }
+
 .navbar-collapse {
     border: none;
     box-shadow: none;
 }
+
 .list-group-item {
     border: none;
     background-color: rgba(255, 255, 255, 0.6);
     color: #fff;
 }
+
 .list-group-item.active,
 .list-group-item.active:focus,
 .list-group-item.active:hover {
@@ -90,15 +102,18 @@ body {
     font-weight: 700;
     font-size: 110%;
 }
+
 .list-group-item:last-child {
     margin-bottom: 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
+
 .list-group-item:first-child {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
 .list-group-item a {
     font-weight: 400;
     color: #fff;
@@ -106,50 +121,61 @@ body {
 }
 
 .stop-name {
-    font-size: 185%;
+    font-size: 125%;
     font-weight: 700;
     margin-left: 2rem;
 }
+
 @media (min-width: 640px) {
     .info-window-container {
         max-width: 480px;
     }
 }
+
 @media (min-width: 768px) {
-    #map {
-        height: calc(100% - 8rem);
-    }
     .map-container {
         top: 8rem;
     }
+
     .title-div {
         height: 8rem;
     }
+
     .search-div {
         padding: 2rem;
         height: 8rem;
     }
+
     .title-text {
         font-weight: 900;
         font-size: 150%;
     }
+
     .list-title {
         font-weight: 700;
         font-size: 130%;
     }
+
     .list-text {
         font-weight: 500;
         font-size: 115%;
         line-height: 1.5;
     }
+
+    .stop-name {
+        font-size: 155%;
+    }
 }
+
 @media (min-width: 1200px) {
     .title-text {
         font-size: 200%;
     }
+
     .list-title {
         font-size: 150%;
     }
+
     .list-text {
         font-size: 130%;
         line-height: 1.5;

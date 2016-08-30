@@ -4,89 +4,89 @@
  * Model decides content of the application.
  */
 var allStops = [{
-    name: "Kehillos Yaakov Synagogue",
+    name: 'Kehillos Yaakov Synagogue',
     lat: 31.714564,
     lng: 34.990076,
-    stopName: "First Stop:",
-    description: "Just above the the corner of Kishon and Sorek.",
-    eta: "ETA is 8:40 AM."
+    stopName: 'First Stop:',
+    description: 'Just above the the corner of Kishon and Sorek.',
+    eta: 'ETA is 8:40 AM.'
 }, {
-    name: "Bar Col",
+    name: 'Bar Col',
     lat: 31.714856,
     lng: 34.993992,
-    stopName: "Second Stop:",
-    description: "Just after the corner where the bottom of Lachish and Sorek meet.",
-    eta: "ETA is 8:41 AM."
+    stopName: 'Second Stop:',
+    description: 'Just after the corner where the bottom of Lachish and Sorek meet.',
+    eta: 'ETA is 8:41 AM.'
 }, {
-    name: "Top of Ayalon Park",
+    name: 'Top of Ayalon Park',
     lat: 31.713816,
     lng: 34.996277,
-    stopName: "Third Stop:",
-    description: "Just after where the top of Lachish intersects with Sorek.",
-    eta: "ETA is 8:42 AM."
+    stopName: 'Third Stop:',
+    description: 'Just after where the top of Lachish intersects with Sorek.',
+    eta: 'ETA is 8:42 AM.'
 }, {
-    name: "Top of Ayalon Street",
+    name: 'Top of Ayalon Street',
     lat: 31.712900,
     lng: 34.997843,
-    stopName: "Fourth Stop:",
-    description: "Where Ayalon and Dolev intersect, near Best Market/Park Center.",
-    eta: "ETA is 8:43 AM."
+    stopName: 'Fourth Stop:',
+    description: 'Where Ayalon and Dolev intersect, near Best Market/Park Center.',
+    eta: 'ETA is 8:43 AM.'
 }, {
-    name: "North Dolev",
+    name: 'North Dolev',
     lat: 31.715687,
     lng: 34.998155,
-    stopName: "Fifth Stop:",
-    description: "Just before Dolev and Katlav meet.",
-    eta: "ETA is 8:44 AM."
+    stopName: 'Fifth Stop:',
+    description: 'Just before Dolev and Katlav meet.',
+    eta: 'ETA is 8:44 AM.'
 }, {
-    name: "Top of Dolev",
+    name: 'Top of Dolev',
     lat: 31.712247,
     lng: 34.999441,
-    stopName: "Sixth Stop:",
-    description: "Just before the corner of Dolev and Shimshon.",
-    eta: "ETA is 8:45 AM."
+    stopName: 'Sixth Stop:',
+    description: 'Just before the corner of Dolev and Shimshon.',
+    eta: 'ETA is 8:45 AM.'
 }, {
-    name: "Bottom of Shimshon",
+    name: 'Bottom of Shimshon',
     lat: 31.714460,
     lng: 35.000503,
-    stopName: "Seventh Stop:",
-    description: "Just before Shimshon intersects with HaYarden.",
-    eta: "ETA is 8:46 AM."
+    stopName: 'Seventh Stop:',
+    description: 'Just before Shimshon intersects with HaYarden.',
+    eta: 'ETA is 8:46 AM.'
 }, {
-    name: "HaYarden",
+    name: 'HaYarden',
     lat: 31.710867,
     lng: 35.001394,
-    stopName: "Eighth Stop:",
-    description: "Just after the corner of HaYarden and Refa'im.",
-    eta: "ETA is 8:46 AM."
+    stopName: 'Eighth Stop:',
+    description: 'Just after the corner of HaYarden and Refa\'im.',
+    eta: 'ETA is 8:46 AM.'
 }, {
-    name: "HaYarkon",
+    name: 'HaYarkon',
     lat: 31.707981,
     lng: 34.998087,
-    stopName: "Ninth Stop:",
-    description: "At the midpoint between HaYarden and Luz.",
-    eta: "ETA is 8:47 AM"
+    stopName: 'Ninth Stop:',
+    description: 'At the midpoint between HaYarden and Luz.',
+    eta: 'ETA is 8:47 AM'
 }, {
-    name: "Bottom of Ayalon Park",
+    name: 'Bottom of Ayalon Park',
     lat: 31.711840,
     lng: 34.990501,
-    stopName: "Tenth Stop:",
-    description: "After the corner of Ayalon and Kishon.",
-    eta: "ETA is 8:48 AM."
+    stopName: 'Tenth Stop:',
+    description: 'After the corner of Ayalon and Kishon.',
+    eta: 'ETA is 8:48 AM.'
 }, {
-    name: "Grill Burger",
+    name: 'Grill Burger',
     lat: 31.712675,
     lng: 34.988595,
-    stopName: "Eleventh Stop:",
-    description: "On the corner of Kishon and Tse'elim.",
-    eta: "ETA is 8:49 AM."
+    stopName: 'Eleventh Stop:',
+    description: 'On the corner of Kishon and Tse\'elim.',
+    eta: 'ETA is 8:49 AM.'
 }, {
-    name: "Hever",
+    name: 'Hever',
     lat: 31.713287,
     lng: 34.982389,
-    stopName: "Final Stop:",
-    description: "After the roundabout where Tse'elim and Hever intersect.",
-    eta: "ETA is 8:50 AM."
+    stopName: 'Final Stop:',
+    description: 'After the roundabout where Tse\'elim and Hever intersect.',
+    eta: 'ETA is 8:50 AM.'
 }];
 
 //GOOGLE MAPS API
@@ -158,21 +158,18 @@ Stop.prototype.flickrCall = function() {
      * farm ID and secret, as returned by many API methods. The URL takes the
      * following format: https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
      * https://www.flickr.com/services/api/explore/flickr.photos.search
-     * api_key=9e2c944d1d3ed0d11cd8884984f82b0a
-     * auth_token=72157673144998585-93ed44225a697585
-     * api_sig=6b51eec9573bedb0a4421cba48de7451
      * https://learn.jquery.com/ajax/working-with-jsonp/
      */
     $.ajax({
-        url: "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=9e2c944d1d3ed0d11cd8884984f82b0a&tags=flowers",
-        jsonp: "jsoncallback",
-        dataType: "jsonp",
+        url: 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=51e2ed3ddd2057e96dec88d2328a37fe&tags=flowers',
+        jsonp: 'jsoncallback',
+        dataType: 'jsonp',
         data: {
-            format: "json"
+            format: 'json'
         },
         // Work with the response
         success: function(data) {
-            // console.log('in success');
+            console.log('in success');
             var randomNumber = Math.floor((Math.random() * 100) + 1);
             // console.log(data); // server response
             var photoURL = 'https://farm' + data.photos.photo[randomNumber].farm + '.static.flickr.com/' + data.photos.photo[randomNumber].server + '/' + data.photos.photo[randomNumber].id + '_' + data.photos.photo[randomNumber].secret + '_s.jpg';
@@ -181,7 +178,7 @@ Stop.prototype.flickrCall = function() {
             openWindow(data);
         },
         error: function(data, e) {
-            // console.log('in fail');
+            console.log('in fail');
             stop.imgURL('img/error.jpg');
             openWindow(data);
         }//,
@@ -208,7 +205,7 @@ var ViewModel = function() {
     //TASK: Implement a list view of the set of locations
     //Iterate through allStops to create observableArray
     allStops.forEach(function(stop) {
-        var stopInstance = new Stop(stop) //create a new instance from JSON
+        var stopInstance = new Stop(stop); //create a new instance from JSON
         self.allStops().push(stopInstance);
     });
 
@@ -226,7 +223,7 @@ var ViewModel = function() {
     };
 
     //Trigger unselectAll when user closes infowindow
-    google.maps.event.addListener(infowindow, "closeclick", function() {
+    google.maps.event.addListener(infowindow, 'closeclick', function() {
         self.unselectAll();
     });
 
@@ -247,6 +244,9 @@ var ViewModel = function() {
             self.showAll();
         } else {
             return ko.utils.arrayFilter(self.allStops(), function(stop) {
+                self.unselectAll();
+                infowindow.close();
+                $('.navbar-collapse').collapse('show');
                 var nameLC = stop.name().toLowerCase();
                 if (nameLC.indexOf(search) > -1) {
                     stop.showStop(true);
@@ -255,7 +255,7 @@ var ViewModel = function() {
                     stop.showStop(false);
                     stop.marker.setVisible(false);
                 }
-            })
+            });
         }
     }, self);
 
@@ -271,5 +271,5 @@ function loadMap() {
  * OR There are no negative repercussions to the UI.
  */
 function googleError() {
-    alert("The Google Maps application has encountered an error.  Please try again later.");
-};
+    alert('The Google Maps application has encountered an error.  Please try again later.');
+}
